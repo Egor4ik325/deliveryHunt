@@ -1,3 +1,8 @@
+# Generator
 faker==10.0.0
 fire==0.4.0
+ 
+# Application
+psycopg[binary]==3.0.6
 argon2-cffi==21.1.0
+flask==2.0.2
