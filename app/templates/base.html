@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>deliveryHunt</title>
+
+    <!-- Metadata -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Express delivery service." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet"> 
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='public/favicons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='public/favicons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='public/favicons/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='public/favicons/site.webmanifest') }}">
+
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='public/css/index.css') }}" />
+
+    {% block head %}{% endblock %}
+  </head>
+
+  <body>
+    <h2>{% block title %}{% endblock %}</h2>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+      &copy; Copyright 2021 by
+      <a href="http://egorindev.com/">Egor Zorin</a>.
+    </div>
+  </body>
+</html>

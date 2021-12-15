@@ -6,7 +6,27 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def hello():
+def index():
+    return render_template("index.html")
+
+
+@app.route("/login")
+def login():
+    return render_template("index.html")
+
+
+@app.route("/register")
+def register():
+    return render_template("register.html")
+
+
+@app.route("/orders")
+def orders():
+    return render_template("orders.html")
+
+
+@app.route("/users")
+def users():
     users = get_users()
     return render_template("users.html", users=users)
 

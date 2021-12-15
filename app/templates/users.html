@@ -1,21 +1,11 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 
-<html lang="en">
-  <head>
-    <title>deliveryHunt</title>
+{% block title %}Users{% endblock %}
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="Express delivery service." />
-    <link rel="icon" href="img/favicon.png" />
-  </head>
-
-  <body>
-    <h1>deliveryHunt</h1>
-    <ol>
-      {% for user in users %}
-      <li>{{user.first_name}} {{user.last_name}}</li>
-      {% endfor %}
-    </ol>
-  </body>
-</html>
+{% block content %}
+  <ol>
+    {% for user in users %}
+    <li>{{user.first_name}} {{user.last_name}}</li>
+    {% endfor %}
+  </ol>
+{% endblock %}

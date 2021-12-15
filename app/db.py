@@ -4,10 +4,26 @@ from pprint import pprint
 import psycopg
 
 
+class DeliveryHuntORM:
+    pass
+
+
+class Session:
+    pass
+
+
 @dataclass
 class User:
+    """Class representing user object/entity/row/data."""
+
     first_name: str
     last_name: str
+
+
+class Users:
+    """ORM for users."""
+
+    pass
 
 
 def get_users() -> list[User]:
