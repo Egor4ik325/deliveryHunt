@@ -23,9 +23,25 @@ dl {
   margin: 0;
 }
 
-/* Main app styling  */
+/* App styling */
 
 #content {
   margin: 10px 10% 10px 10%;
   /* text-align: center; */
+}
+
+#footer {
+  font-size: 1rem;
+}
+
+.form-error {
+  padding: 10px 10px 10px 10px;
+  background-color: rgb(255, 194, 194);
+  color: rgb(146, 11, 11);
+  display: inline-block;
+  border-radius: 5px;
+  border-color: rgb(212, 45, 45);
+  border-style: solid;
+  border-width: 1px;
+  font-size: 1rem;
 }

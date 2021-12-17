@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS public.manufacturer (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY (
         INCREMENT 1 START 15 MINVALUE 1 MAXVALUE 2147483647 CACHE 1
     ),
-    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    location character varying(200) COLLATE pg_catalog."default",
+    "name" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    "location" character varying(200) COLLATE pg_catalog."default",
     tax_number character(15) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT manufacturer_pkey PRIMARY KEY (id),
     CONSTRAINT manufacturer_unique_name UNIQUE (name),
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS public.electric_vehicle_type (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY (
         INCREMENT 1 START 15 MINVALUE 1 MAXVALUE 2147483647 CACHE 1
     ),
-    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    "name" character varying(100) COLLATE pg_catalog."default" NOT NULL,
     manufacturer integer,
     price real,
     battery_lifetime INTERVAL,
@@ -60,7 +60,7 @@ CREATE TABLE public.electric_vehicle (
     id integer generated always AS identity (
         INCREMENT 1 START 15 MINVALUE 1 MAXVALUE 2147483647 CACHE 1
     ),
-    TYPE integer,
+    "type" integer,
     mileage double precision,
     production_time timestamp,
     CONSTRAINT electric_vehicle_pkey PRIMARY KEY (id),
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS public."user" (
     first_name character varying(20) COLLATE pg_catalog."default" NOT NULL,
     last_name character varying(20) COLLATE pg_catalog."default" NOT NULL,
     phone character varying(15) COLLATE pg_catalog."default" NOT NULL,
-    PASSWORD character(77) COLLATE pg_catalog."default" NOT NULL,
+    "password" character(77) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT pkey PRIMARY KEY (id),
     CONSTRAINT first_last_names_unique UNIQUE (first_name, last_name)
 );
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS public."order" (
     create_time timestamp without time zone NOT NULL DEFAULT NOW(),
     address_from integer NOT NULL,
     address_to integer NOT NULL,
-    weight real,
+    "weight" real,
     COMMENT integer,
     max_delivery_time INTERVAL NOT NULL,
     take_time timestamp without time zone,
