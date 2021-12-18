@@ -3,4 +3,45 @@
 {% block title %}Orders{% endblock %}
 
 {% block content %}
+    <!-- Client view -->
+    {% if user.is_client %}
+        <p>Your orders</p>
+        {% if orders %}
+            <ul class="order-list">
+                {% for order in orders %}
+                    <div class="order">
+                        <a href="{{ url_for('order_detail', id=order.id ) }}">{{ order }}</a>
+                    </div>
+                {% endfor %}
+            </ul>
+            <a class="btn" href="{{ url_for('order_create') }}">Create</a>
+        {% endif %}
+    {% elif user.is_courier %}
+        <!-- Courier view -->
+        <p>Available orders: </p>
+        <ul class="order-list">
+            {% if free_orders is defined and free_orders %}
+                {% for order in free_orders %}
+                    <div class="order">
+                        <a href="{{ url_for('order_detail', id=order.id ) }}">{{ order }}</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <li>No orders available right not(</li>
+            {% endif %}
+        </ul>
+
+        <p>Taken orders:</p>
+        <ul class="order-list">
+            {% if taken_orders is defined and taken_orders %}
+                {% for order in taken_orders %}
+                    <div class="order">
+                        <a href="{{ url_for('order_detail', id=order.id ) }}">{{ order }}</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <li>You don't have any taken orders.</li>
+            {% endif %}
+        </ul>
+    {% endif %}
 {% endblock %}

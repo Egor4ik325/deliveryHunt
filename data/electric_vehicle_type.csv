@@ -1,0 +1,9 @@
+id	name	vehicle_type	manufacturer	price	battery_lifetime
+1	Xiaomi Mi M365	bicycle	9	3848.09	84 hours
+2	Hiboy S2	bicycle	3	628.16	33 hours
+3	Segway Ninebot Max	scooter	10	7126.2	83 hours
+4	Apollo City	mope	7	1431.44	24 hours
+5	Apollo Explore	scooter	3	936	56 hours
+6	Kaabo Wolf King	mope	2	1593.9	27 hours
+7	NAMI Burn-E	car	9	1020.37	32 hours
+8	Segway Ninebot KickScooter Max	bicycle	7	4845.44	54 hours

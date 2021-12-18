@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS public.courier (
     CONSTRAINT courier_pkey PRIMARY KEY (id),
     CONSTRAINT user_account_unique UNIQUE ("user"),
     CONSTRAINT courier_user_fk FOREIGN KEY ("user") REFERENCES public."user" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT courier_vehicle_fkey FOREIGN KEY (vehicle) REFERENCES public.electric_vehicle (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE NOT VALID
+    CONSTRAINT courier_vehicle_fkey FOREIGN KEY (vehicle) REFERENCES public.electric_vehicle (id) MATCH SIMPLE ON UPDATE SET NULL ON DELETE SET NULL NOT VALID
 );
 
 CREATE INDEX IF NOT EXISTS fki_courier_vehicle_fkey ON public.courier USING btree (vehicle ASC NULLS LAST);
@@ -135,18 +135,18 @@ CREATE TABLE IF NOT EXISTS public."order" (
     address_from integer NOT NULL,
     address_to integer NOT NULL,
     "weight" real,
-    COMMENT integer,
+    "comment" integer,
     max_delivery_time INTERVAL NOT NULL,
     take_time timestamp without time zone,
     deliver_time timestamp without time zone,
     delivered boolean,
     rate integer,
     CONSTRAINT order_pkey PRIMARY KEY (id),
-    CONSTRAINT order_client_fk FOREIGN KEY (client) REFERENCES public.client (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT order_comment_fk FOREIGN KEY (COMMENT) REFERENCES public.comment (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT order_courier_fk FOREIGN KEY (courier) REFERENCES public.courier (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT order_from_address_fk FOREIGN KEY (address_from) REFERENCES public.address (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT order_to_address_fk FOREIGN KEY (address_to) REFERENCES public.address (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT order_client_fk FOREIGN KEY (client) REFERENCES public.client (id) MATCH SIMPLE ON UPDATE SET NULL ON DELETE SET NULL,
+    CONSTRAINT order_comment_fk FOREIGN KEY (COMMENT) REFERENCES public.comment (id) MATCH SIMPLE ON UPDATE SET NULL ON DELETE SET NULL,
+    CONSTRAINT order_courier_fk FOREIGN KEY (courier) REFERENCES public.courier (id) MATCH SIMPLE ON UPDATE SET NULL ON DELETE SET NULL,
+    CONSTRAINT order_from_address_fk FOREIGN KEY (address_from) REFERENCES public.address (id) MATCH SIMPLE ON UPDATE SET NULL ON DELETE SET NULL,
+    CONSTRAINT order_to_address_fk FOREIGN KEY (address_to) REFERENCES public.address (id) MATCH SIMPLE ON UPDATE SET NULL ON DELETE SET NULL,
     CONSTRAINT order_rate_between_1_and_5 CHECK (
         rate >= 1
         AND rate <= 5

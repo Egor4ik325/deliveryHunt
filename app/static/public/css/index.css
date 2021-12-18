@@ -1,4 +1,9 @@
 /* HTML boilerplate */
+:root {
+  --primary: rgb(250, 85, 0);
+  --secondary: rgb(122, 122, 122);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -11,7 +16,6 @@ body {
 }
 
 body {
-  font-size: 1.2rem;
   font-family: "IBM Plex Sans", sans-serif;
   text-rendering: optimizeLegibility;
 }
@@ -23,15 +27,54 @@ dl {
   margin: 0;
 }
 
+a {
+  color: rgb(73, 73, 73);
+}
+
 /* App styling */
+
+nav {
+  background-color: rgb(243, 243, 243);
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.brand-name {
+  color: var(--primary);
+  text-decoration: none;
+  padding: 5px;
+  font-weight: 600;
+}
+
+.nav-link {
+  text-decoration: none;
+  padding: 5px;
+  color: var(--secondary);
+}
+
+.nav-link:hover {
+  background-color: rgb(158, 158, 158);
+  border-radius: 5px;
+  color: rgb(236, 236, 236);
+}
 
 #content {
   margin: 10px 10% 10px 10%;
+  font-size: 1.2rem;
   /* text-align: center; */
 }
 
 #footer {
-  font-size: 1rem;
+}
+
+.btn {
+  background-color: var(--primary);
+  color: #ffffff;
+  padding: 3px 6px;
+  border-radius: 6px;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .form-error {
@@ -43,5 +86,4 @@ dl {
   border-color: rgb(212, 45, 45);
   border-style: solid;
   border-width: 1px;
-  font-size: 1rem;
 }

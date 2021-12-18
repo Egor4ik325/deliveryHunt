@@ -14,16 +14,16 @@
             {% endfor %}
         </div>
     {% endif %}
-    <form method="POST" action="{{ url_for('login') }}">
+    <form method="POST" action="{{ url_for('order_create') }}">
         <div>
-            <label for="phone">Phone:</label>
-            <input type="tel" name="phone" placeholder="+7 912-293-2323" />
+            <label for="phone">Weight:</label>
+            <input type="number" name="weight" placeholder="10.4" />
         </div>
         <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" placeholder="Password" />
+            <label for="password">Max delivery time:</label>
+            <input type="time" name="max_delivery_time" placeholder="3 hours" />
         </div>
 
-        <input type="submit" value="Login" />
+        <input type="submit" value="Create" />
     </form>
-{% endblock %}
+{% endblock }

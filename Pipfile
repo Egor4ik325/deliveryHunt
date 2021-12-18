@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fire = "==0.4.0"
+argon2-cffi = "==21.1.0"
+Faker = "==10.0.0"
+psycopg = {version = "==3.0.6", extras = ["binary"]}
+Flask = "==2.0.2"
+
+[dev-packages]
+black = "*"
+
+[requires]
+python_version = "3.10"

@@ -3,9 +3,10 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
+
     Hi, we are deliveryHunt.
 
-    <div>
+    <div style="margin-bottom: 5px;">
         {% if user %}
             <p>You are logged-in as {{ user }}</p>
             <ul>
@@ -14,5 +15,17 @@
                 <li>Is courier: {{ user.is_courier }}</li>
             </ul>
         {% endif %}
+    </div>
+    <div>
+        Administration operations:
+        <ul>
+            <li><a href="#">Add 1 hour to orders</a></li>
+            <li><a href="#">Count left orders comments</a></li>
+            <li><a href="#">Couriers without orders</a></li>
+            <li><a href="#">Count electric cars</a></li>
+            <li><a href="#">Get rate relation</a></li>
+            <li><a href="#">Delete unused comments</a></li>
+            <li><a href="#">Latest orders</a></li>
+        </ul>
     </div>
 {% endblock %}

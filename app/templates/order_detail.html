@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ order }}
+{% endblock %}
+
+{% block content %}
+    <div class="order-detail">
+        <div>Id: {{ order.id }}</div>
+        <div>User: {{ order.client }}</div>
+        <div>Courier: {{ order.courier }}</div>
+        <div>Weight: {{ order.weight }}</div>
+    </div>
+{% endblock %}

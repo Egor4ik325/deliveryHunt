@@ -24,11 +24,45 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='public/css/index.css') }}" />
 
     {% block head %}{% endblock %}
+
+    <style>
+    </style>
+
+    <script>
+    </script>
   </head>
 
+
   <body>
+    <!-- Navigation bar -->
+    <nav>
+      <a href="{{ url_for('index') }}" style="display: flex;">
+        <img src="{{ url_for('static', filename='assets/img/logo.svg') }}" width="48" height="48" style="margin-right: 10px;" />
+      </a>
+      <div class="brand-name">deliveryHunt</div>
+      {% if user %}
+        {% if user.is_superuser %}
+          <a class="nav-link" href="{{ url_for('vehicles') }}">Vehicles</a>
+        {% elif user.is_client %}
+          <a
+            class="nav-link"
+            href="{{ url_for('orders') }}"
+            {% if url_for('orders') == url_for(request.endpoint) %}
+              style="text-decoration: underline;"
+            {% endif %}
+          >Orders</a>
+        {% elif user.is_courier %}
+          <a class="nav-link" href="{{ url_for('orders') }}">Orders</a>
+        {% endif %}
+        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+      {% endif %}
+    </nav>
     <h2>{% block title %}{% endblock %}</h2>
+    <!-- Main content -->
     <div id="content">{% block content %}{% endblock %}</div>
+    <!-- Footer -->
     <div id="footer">
       &copy; Copyright 2021 by
       <a href="http://egorindev.com/">Egor Zorin</a>.

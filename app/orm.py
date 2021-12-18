@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import InitVar, dataclass, field
-from functools import cached_property
+from datetime import datetime, timedelta
+from functools import cache, cached_property
 from pprint import pprint
+from typing import Callable
+from uuid import UUID
 
 import psycopg
 
@@ -22,7 +25,7 @@ _cur = _con.cursor()
 class Users:
     """Class representing database table operations (ORM)."""
 
-    def get(self, *, id_=None, phone=None) -> User | None:
+    def get(self, *, id_: int = None, phone: str = None) -> User | None:
         if id_ is not None and phone is not None:
             return
 
@@ -52,7 +55,7 @@ class Users:
             return
 
         id, first_name, last_name, phone, password, is_superuser = user
-        return User(id, first_name, last_name, phone, password, is_superuser)
+        return User(id, first_name, last_name, phone, password, is_superuser)  # type: ignore
 
     def list(self):
         _cur.execute(
@@ -68,32 +71,142 @@ class Users:
 
 
 class Clients:
-    def get(self, user) -> Client | None:
+    def get(self, user: User) -> Client | None:
         _cur.execute(
             """
-        SELECT id, user, individual
-        FROM public.client WHERE client.user = %s
+        SELECT id, "user", individual
+        FROM public.client WHERE client."user" = %s
         """,
-            (user,),
+            (user.id,),
+        )
+        client = _cur.fetchone()
+        return client and Client(*client)
+
+    def get_by_id(self, id_: int) -> Client | None:
+        _cur.execute(
+            """
+        SELECT id, "user", individual
+        FROM public.client WHERE id = %s
+        """,
+            (id_,),
         )
         client = _cur.fetchone()
         return client and Client(*client)
 
 
 class Couriers:
-    def get(self, user) -> Courier | None:
+    def get(self, user: User) -> Courier | None:
         _cur.execute(
             """
-        SELECT id, user, vehicle, passport, employment_record, resident_place
+        SELECT id, "user", vehicle, passport, employment_record, resident_place
         FROM public.courier WHERE courier.user = %s
         """,
-            (user,),
+            (user.id,),
+        )
+        courier = _cur.fetchone()
+        return courier and Courier(*courier)
+
+    def get_by_id(self, id_: int) -> Courier | None:
+        _cur.execute(
+            """
+        SELECT id, "user", vehicle, passport, employment_record, resident_place
+        FROM public.courier WHERE courier.id = %s
+        """,
+            (id_,),
         )
         courier = _cur.fetchone()
         return courier and Courier(*courier)
 
 
+class Orders:
+    def list(self, *, client: Client = None) -> list[Order]:
+        if client is not None:
+            _cur.execute(
+                """
+                SELECT id, client, courier, create_time, address_from, address_to, weight, comment,
+                max_delivery_time, take_time, deliver_time, delivered, rate
+                FROM public.order
+                WHERE client = %s
+                """,
+                (client.id,),
+            )
+            orders = _cur.fetchall()
+            return [Order(*order) for order in orders] if orders is not None else []
+
+        return []
+
+    def list_free(self) -> list[Order]:
+        _cur.execute(
+            """
+            SELECT id, client, courier, create_time, address_from, address_to, weight, comment,
+            max_delivery_time, take_time, deliver_time, delivered, rate
+            FROM public.order
+            WHERE public.order.courier is NULL;
+            """
+        )
+        orders = _cur.fetchall()
+        return [Order(*order) for order in orders] if orders is not None else []
+
+    def list_taken(self, courier: Courier) -> list[Order]:
+        _cur.execute(
+            """
+            SELECT id, client, courier, create_time, address_from, address_to, weight, comment,
+            max_delivery_time, take_time, deliver_time, delivered, rate
+            FROM public.order
+            WHERE public.order.courier = %s;
+            """,
+            (courier.id,),
+        )
+        orders = _cur.fetchall()
+        return [Order(*order) for order in orders] if orders is not None else []
+
+    def get(self, id_: str) -> Order | None:
+        _cur.execute(
+            """
+            SELECT id, client, courier, create_time, address_from, address_to, weight, comment,
+            max_delivery_time, take_time, deliver_time, delivered, rate
+            FROM public.order
+            WHERE public.order.id = %s;
+            """,
+            (id_,),
+        )
+        order = _cur.fetchone()
+        return order and Order(*order)
+
+
+class Comments:
+    pass
+
+
+class Table:
+    """Base class for common table functionality."""
+
+    fields = []
+
+    def list(self):
+        pass
+
+    def get(self):
+        pass
+
+    def update(self):
+        pass
+
+
+class Addresses:
+    pass
+
+
+class Administration:
+    pass
+
+
 clients = Clients()
+couriers = Couriers()
+users = Users()
+orders = Orders()
+comments = Comments()
+addresses = Addresses()
 
 
 @dataclass(frozen=True)
@@ -110,16 +223,24 @@ class User:
     # Attributes derived from id
 
     @cached_property
+    def client(self) -> Client | None:
+        return clients.get(self)
+
+    @cached_property
+    def courier(self) -> Courier | None:
+        return couriers.get(self)
+
+    @cached_property
     def is_client(self) -> bool:
         """Is client attribute (property) is derived form user id.
         Expensive to compute (requires database query) and not always needed.
         """
-        return True if clients.get(self.id) else False
+        return True if self.client else False
 
     @property
     def is_courier(self) -> bool:
         """Regular users can be either clients or couriers. Admin users can be neither."""
-        return not self.is_client
+        return True if self.courier else False
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
@@ -130,6 +251,13 @@ class Client:
     id: int
     _user: int
     individual: bool
+
+    @cached_property
+    def user(self) -> User | None:
+        return users.get(id_=self._user)
+
+    def __str__(self):
+        return f'Client "{self.user}"'
 
 
 @dataclass
@@ -160,44 +288,47 @@ class Courier:
         return f'Courier "{self.user}"'
 
 
+@dataclass(frozen=True)
 class Order:
-    pass
+    id: UUID
+    _client: int
+    _courier: int | None
+    create_time: datetime
+    _address_from: int
+    _address_to: int
+    weight: float | None
+    _comment: int | None
+    max_delivery_time: timedelta
+    take_time: datetime | None
+    delivery_time: datetime | None
+    delivered: bool | None
+    rate: int | None
 
+    @cached_property
+    def client(self) -> Client | None:
+        return clients.get_by_id(self._client)
 
-class Orders:
-    pass
+    @cached_property
+    def courier(self) -> Courier | None:
+        if self._courier is not None:
+            return couriers.get_by_id(self._courier)
+
+    def address_from(self):
+        pass
+
+    def address_to(self):
+        pass
+
+    def comment(self):
+        pass
+
+    def __str__(self):
+        return f"Order #{self.id}"
 
 
 class Comment:
     pass
 
 
-class Comments:
-    pass
-
-
 class Address:
     pass
-
-
-class Addresses:
-    pass
-
-
-users = Users()
-orders = Orders()
-comments = Comments()
-addresses = Addresses()
-
-
-# if __name__ == "__main__":
-#     with psycopg.connect(
-#         host="localhost",
-#         port="5432",
-#         user="postgres",
-#         password="postgres",
-#         dbname="postgres",
-#     ) as con:
-#         with con.cursor() as cur:
-#             cur.execute("SELECT first_name, last_name FROM public.user;")
-#             pprint(cur.fetchall())
